@@ -1,6 +1,6 @@
 // setting up db connection
 const mysql2 = require("mysql2");
-require("dotenv").config();
+require("dotenv").config({ path:'../.env'});
 
 const dbConnection = mysql2.createPool({
   user: process.env.DB_USER,
@@ -11,9 +11,9 @@ const dbConnection = mysql2.createPool({
 });
 
 
-dbConnection.execute("select 'test'", (err, result) => {
+
+dbConnection.execute("select version()", (err, result) => {
   if (err) {
-    console.log(process.env.DB_DATABASE)
     console.log(err.message);
   } else {
     console.log(result);

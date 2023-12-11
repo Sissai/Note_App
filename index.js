@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+require('dotenv').config();
 
 const port = 3003
 
@@ -20,6 +21,6 @@ app.listen(port,(err)=>{
   if (err){
     console.log(err.message)
   } else {
-    console.log(`Litsening on port ${port}`);
+    console.log(`Listening on port ${port}`);
   }
 })
