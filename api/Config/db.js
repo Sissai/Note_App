@@ -20,4 +20,13 @@ dbConnection.execute("select version()", (err, result) => {
   }
 });
 
+
+dbConnection.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(50) UNIQUE NOT NULL, password VARCHAR(255) NOT NULL, email VARCHAR(255) UNIQUE)", (err, result) => {
+  if (err) {
+    console.error(err.message);
+  } else {
+    console.log(result);
+  }
+});
+
 module.exports = dbConnection;
