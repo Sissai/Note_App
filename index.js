@@ -10,6 +10,7 @@ const userRoute = require('./api/routes/userRoute')
 const dbConnection = require("./api/Config/db");
 
 // user route middleware
+app.use(express.json())
 
 app.use("/api/users", userRoute);
 

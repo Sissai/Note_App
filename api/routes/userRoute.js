@@ -1,17 +1,16 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 // user controller functions
 
-const{register,login,checkuser}=require('../controller/userController.js')
+const{register,login,checkuser}=require('../controller/userController.js');
 
-// register route
+// register user
 
-router.post('/register',register)
+router.post('/register', register);
 
 // login user
 
-router.post("/login", login);
-
+router.post("/login", login); 
 
 // check user
 
