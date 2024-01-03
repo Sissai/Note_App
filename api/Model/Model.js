@@ -12,3 +12,5 @@ const notesTable = `CREATE TABLE notes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );`;
 
+
+module.exports = {usersTable, notesTable}
