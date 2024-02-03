@@ -3,10 +3,10 @@ const mysql2 = require("mysql2");
 require("dotenv").config();
 const {usersTable,notesTable} = require("../Model/Model")
 const dbConnection = mysql2.createPool({
-  user: "newuser",
-  database: "note_app",
+  user: "noteuser",
+  database: "note-app",
   host: "localhost",
-  password: "0922597281aA!",
+  password: "y1234567",
   connectionLimit: 10,
 });
 

@@ -1,4 +1,5 @@
 
+const { request } = require("express");
 const dbConnection = require("../Config/db");
 
 
@@ -16,6 +17,12 @@ const postNotes=(req,res)=>{
 
 
 const getNotes= (req,res)=>{
+  const data =req.body
+   try {
+    dbConnection.query("select")
+  } catch (error) {
+    
+  }
 
 }
 
