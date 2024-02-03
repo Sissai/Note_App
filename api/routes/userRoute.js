@@ -4,7 +4,7 @@ const { postNotes, getNotes } = require("../controller/notesController");
 
 // user controller functions
 
-const{register,login,checkuser}=require('../controller/userController.js')
+const{register,login,checkuser, logout}=require('../controller/userController.js')
 
 // register route
 
@@ -19,8 +19,11 @@ router.post("/login", login);
 
 router.get("/check", checkuser);
 
+// logout user
 
-// post notes
-router.post("/notes",postNotes)
+router.get("/logout", logout);
+
+
+
 
 module.exports = router

@@ -17,12 +17,6 @@ const postNotes=(req,res)=>{
 
 
 const getNotes= (req,res)=>{
-  const data =req.body
-   try {
-    dbConnection.query("select")
-  } catch (error) {
-    
-  }
 
 }
 
