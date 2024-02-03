@@ -20,7 +20,6 @@ router.post("/login", login);
 router.get("/check", checkuser);
 
 
-// post notes
-router.post("/notes",postNotes)
+
 
 module.exports = router

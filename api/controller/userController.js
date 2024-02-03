@@ -1,5 +1,9 @@
+
+require("dotenv").config()
 const { json } = require("express");
 const dbConnection = require("../Config/db");
+const jwt = require("jsonwebtoken");
+
 
 const newUser={
   id:5,
@@ -11,32 +15,17 @@ const newUser={
 }
 
 
+
+
+
+const createToken = (id)=>{
+  return jwt.sign(id, process.env.TOKEN_SECRET);
+}
+
+
 const register = async (req, res) => {
 
 const data =req.body 
-// console.log(data)
-
-// dbConnection.query(
-//   `SELECT * from users where username='${data.username}' `,
-//   (err, result) => {
-//     if (err) {
-//       res.status(500);
-//     } else {
-//       if (result.length > 0) {
-//         res.json("User Already Exists");
-//       } else {
-//         dbConnection.query("INSERT INTO users SET ?", data, (err, result) => {
-//           if (err) {
-//             console.log("Database Error:", err.message);
-//           } else {
-//             res.status(200).json(`User Successfully Registered: ${data.username}`);
-//           }
-//         });
-//       }
-//     }
-    
-//   }
-// );
 
 
 
@@ -47,8 +36,24 @@ try {
   if (existingUser[0].length > 0) {
     res.send("User Already Exists");
     return;
+
+
   }
-  await dbConnection.query("INSERT INTO users SET ?", data)
+  const result = await dbConnection.query("INSERT INTO users SET ?", data)
+  const user = {
+  username:data.username,
+  email:data.email,
+id: result.insertId
+}
+
+const token = createToken(user)
+
+res.cookie("token", token)
+
+// decoding
+
+const decodedData = jwt.verify(token,process.env.TOKEN_SECRET)
+
   res.status(200).json(`User Successfully Registered: ${data.username}`);
 } catch (error) {
   console.log(error.message)
@@ -69,6 +74,20 @@ const login = async (req, res) => {
       console.log(existingUser[0]);
       if(existingUser[0].length>0){
        if (userData.password===existingUser[0][0].password){
+
+const userData = {
+  username:existingUser[0][0].username,
+  id: existingUser[0][0].id,
+email:existingUser[0][0].email
+}
+
+        const token = createToken(userData)
+        console.log(token)
+
+        res.cookie("token", token)
+
+        const decodedData = jwt.verify(token, process.env.TOKEN_SECRET);
+        console.log(decodedData)
         res.json({"Logged in as":existingUser[0][0]})
         console.log('User successfully logged in')
        }else{
