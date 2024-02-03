@@ -3,7 +3,7 @@ require("dotenv").config()
 const { json } = require("express");
 const dbConnection = require("../Config/db");
 const jwt = require("jsonwebtoken");
-
+const bcrypt = require("bcrypt")
 
 const newUser={
   id:5,
@@ -39,6 +39,13 @@ try {
 
 
   }
+
+
+const salt =await bcrypt.genSalt()
+const hashed_password=await bcrypt.hash(data.password, salt)
+data.password = hashed_password
+
+
   const result = await dbConnection.query("INSERT INTO users SET ?", data)
   const user = {
   username:data.username,
@@ -73,7 +80,9 @@ const login = async (req, res) => {
       );
       console.log(existingUser[0]);
       if(existingUser[0].length>0){
-       if (userData.password===existingUser[0][0].password){
+const auth = bcrypt.compare(userData.password, existingUser[0][0].password);
+
+       if (auth){
 
 const userData = {
   username:existingUser[0][0].username,
@@ -88,7 +97,7 @@ email:existingUser[0][0].email
 
         const decodedData = jwt.verify(token, process.env.TOKEN_SECRET);
         console.log(decodedData)
-        res.json({"Logged in as":existingUser[0][0]})
+        res.json({"Logged in as":existingUser[0][0].username})
         console.log('User successfully logged in')
        }else{
         res.send("Incorrect Password")
@@ -108,5 +117,26 @@ const checkuser = (req, res) => {
 
 
 
+const logout = (req,res)=>{
+res.cookie("token", '')
+res.send("Successfully logged out")
+}
 
-module.exports = { register, login, checkuser };
+
+const protect= (req, res, next)=>{
+  
+
+  const token = req.cookies["token"]
+jwt.verify(token,process.env.TOKEN_SECRET,(error, payload)=>{
+  if (error){
+    console.log("Could not log user in", error.message)
+  res.status(401).json({message:"you are not logged in"})
+  } else {
+    req.user=payload
+    next()
+  }
+
+})
+}
+
+module.exports = { register, login,logout, checkuser, protect };

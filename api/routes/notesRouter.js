@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const { postNotes, getNotes, updateNotes, deleteNotes } = require("../controller/notesController");
+const { protect } = require("../controller/userController");
 
 
 
 // post notes
-router.post("/psot",postNotes)
-router.get("/get",getNotes)
-router.post("/update", updateNotes);
-router.delete("/delete", deleteNotes);
+router.post("/post", protect, postNotes);
+router.get("/get",protect,getNotes)
+router.post("/update", protect, updateNotes);
+router.delete("/delete", protect, deleteNotes);
 
 
 module.exports = router;
