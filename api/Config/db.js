@@ -1,12 +1,12 @@
 // setting up db connection
 const mysql2 = require("mysql2");
 require("dotenv").config();
-const {usersTable,notesTable} = require("../Model/Model")
+const { usersTable, notesTable } = require("../Model/Model");
 const dbConnection = mysql2.createPool({
-  user: "noteuser",
-  database: "note-app",
+  user: process.env.DB_USER,
+  database: process.env.DB_DATABASE,
   host: "localhost",
-  password: "y1234567",
+  password: process.env.DB_PASS,
   connectionLimit: 10,
 });
 
@@ -18,16 +18,13 @@ dbConnection.execute("select version()", (err, result) => {
   }
 });
 
-dbConnection.execute(
-  usersTable,
-  (err, result) => {
-    if (err) {
-      console.error(err.message);
-    } else {
-      console.log(result);
-    }
+dbConnection.execute(usersTable, (err, result) => {
+  if (err) {
+    console.error(err.message);
+  } else {
+    console.log(result);
   }
-);
+});
 dbConnection.execute(notesTable, (err, result) => {
   if (err) {
     console.error(err.message);
@@ -36,5 +33,4 @@ dbConnection.execute(notesTable, (err, result) => {
   }
 });
 
-
-module.exports = dbConnection.promise()
+module.exports = dbConnection.promise();
