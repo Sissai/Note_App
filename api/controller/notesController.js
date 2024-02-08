@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const dbConnection = require("../Config/db");
 
 const post_note = (req, res) => {
-  const data = req.body;
+  const data = req.body.text;
   const user = req.user.id;
   dbConnection.execute(
     "INSERT INTO notes (user_id, note_text) VALUES (?,?)",

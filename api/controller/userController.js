@@ -3,14 +3,6 @@ const dbConnection = require("../Config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const newUser = {
-  username: "Messai Haile",
-  email: "mes@example.com",
-  password: "1234567",
-  hashed_password: "dkdk",
-  session_id: "2445723",
-};
-
 const maxAge = 3 * 24 * 60 * 60;
 
 const createToken = (id) => {
@@ -19,8 +11,6 @@ const createToken = (id) => {
 
 const register = (req, res) => {
   const data = req.body;
-
-  console.log(data);
 
   dbConnection.query(
     `SELECT * FROM users WHERE email = '${data.email}' OR username = '${data.username}';`,
@@ -46,12 +36,15 @@ const register = (req, res) => {
 
             console.log("Created new user: ", data.username);
 
-            const token = createToken(result.insertId);
-
             const new_user = {
               username: data.username,
               email: data.email,
+              id: result.insertId,
             };
+            console.log(new_user);
+
+            const token = createToken(new_user);
+
             res.cookie("token", token);
             res.status(200).json({ registered_as: new_user });
           });
@@ -65,7 +58,7 @@ const login = async (req, res) => {
   const userdata = req.body;
 
   dbConnection.query(
-    `SELECT * FROM users WHERE email = '${userdata.email}' AND username = '${userdata.username}';`,
+    `SELECT * FROM users WHERE email = '${userdata.email}' OR username = '${userdata.username}';`,
     async (err, result) => {
       if (err) {
         console.log(err);
@@ -77,7 +70,7 @@ const login = async (req, res) => {
             result[0].password
           );
           if (auth) {
-            console.log(`Logged in as ${userdata.username}`);
+            console.log(`Logged in as ${result[0].username}`);
             const logged_user = {
               id: result[0].id,
               username: result[0].username,
@@ -120,6 +113,8 @@ const protect = (req, res, next) => {
     }
     const user = payload;
 
+    console.log(user);
+
     req.user = user;
     next();
   });
@@ -138,7 +133,7 @@ const all_users = (req, res) => {
       results.push(users);
     }
 
-    console.log(results);
+    console.log("All users displayed");
     res.status(200).json({ all_users: results });
   });
 };
