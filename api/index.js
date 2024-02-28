@@ -15,8 +15,7 @@ app.use(express.json());
 app.use(cookieparser());
 app.use("/api/users", userRoute);
 app.use("/api/notes", noteRoute);
-// note route
-app.use("/api/notes", noteRoute);
+
 app.listen(port, (err) => {
   if (err) {
     console.log(err.message);
