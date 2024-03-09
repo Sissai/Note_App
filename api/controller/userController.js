@@ -1,108 +1,142 @@
 require("dotenv").config();
-const { json } = require("express");
 const dbConnection = require("../Config/db");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const maxAge = 3 * 24 * 60 * 60;
 
 const createToken = (id) => {
   return jwt.sign(id, process.env.TOKEN_SECRET);
 };
 
-const register = async (req, res) => {
+const register = (req, res) => {
   const data = req.body;
 
-  try {
-    const existingUser = await dbConnection.query(
-      `SELECT * from users where username='${data.username}' `
-    );
+  dbConnection.query(
+    `SELECT * FROM users WHERE email = '${data.email}' OR username = '${data.username}';`,
+    async (err, result) => {
+      if (err) {
+        console.error(err);
+        return;
+      } else {
+        if (result.length > 0) {
+          console.log("Already exists");
+          res.status(304).json({ error: "User already exists" });
+          return;
+        } else {
+          const salt = await bcrypt.genSalt();
+          const hashed_password = await bcrypt.hash(data.password, salt);
+          data.password = hashed_password;
+          dbConnection.query("INSERT INTO users SET ?", data, (err, result) => {
+            if (err) {
+              console.log("\x1b[41mDataBaseError:\x1b[0m", err.message);
+              res.status(500).json({ error: "Cannot complete task" });
+              return;
+            }
 
-    if (existingUser[0].length > 0) {
-      res.send("User Already Exists");
-      return;
+            console.log("Created new user: ", data.username);
+
+            const new_user = {
+              username: data.username,
+              email: data.email,
+              id: result.insertId,
+            };
+            console.log(new_user);
+
+            const token = createToken(new_user);
+
+            res.cookie("token", token);
+            res.status(200).json({ registered_as: new_user });
+          });
+        }
+      }
     }
-
-    const salt = await bcrypt.genSalt();
-    const hashed_password = await bcrypt.hash(data.password, salt);
-    data.password = hashed_password;
-
-    const result = await dbConnection.query("INSERT INTO users SET ?", data);
-    const user = {
-      username: data.username,
-      email: data.email,
-      id: result[0].insertId,
-    };
-
-    const token = createToken(user);
-
-    res.cookie("token", token);
-
-    res.status(200).json(`User Successfully Registered: ${data.username}`);
-    console.log(`User Successfully Registered: ${data.username}`);
-  } catch (error) {
-    console.log("Error: ", error.message);
-  }
+  );
 };
 
 const login = async (req, res) => {
-  const userData = req.body;
+  const userdata = req.body;
 
-  try {
-    const existingUser = await dbConnection.query(
-      `SELECT * from users where username='${userData.username}' AND email='${userData.email}' `
-    );
-    console.log(existingUser[0]);
-    if (existingUser[0].length > 0) {
-      const auth = bcrypt.compare(
-        userData.password,
-        existingUser[0][0].password
-      );
-
-      if (auth) {
-        const userData = {
-          username: existingUser[0][0].username,
-          id: existingUser[0][0].id,
-          email: existingUser[0][0].email,
-        };
-
-        const token = createToken(userData);
-        console.log(token);
-
-        res.cookie("token", token);
-
-        const decodedData = jwt.verify(token, process.env.TOKEN_SECRET);
-        console.log(decodedData);
-        res.json({ "Logged in as": existingUser[0][0].username });
-        console.log("User successfully logged in");
+  dbConnection.query(
+    `SELECT * FROM users WHERE email = '${userdata.email}' OR username = '${userdata.username}';`,
+    async (err, result) => {
+      if (err) {
+        console.log(err);
+        return;
       } else {
-        res.send("Incorrect Password");
+        if (result.length > 0) {
+          const auth = await bcrypt.compare(
+            userdata.password,
+            result[0].password
+          );
+          if (auth) {
+            console.log(`Logged in as ${result[0].username}`);
+            const token = createToken(logged_user);
+            const logged_user = {
+              id: result[0].id,
+              username: result[0].username,
+              email: result[0].email,
+              accessToken: token,
+            };
+            res.cookie("token", token);
+            res.status(200).json({ logged_as: logged_user });
+          } else {
+            console.log(
+              `\x1b[41mPasswordError:\x1b[0m Password for ${userdata.username} is incorrect`
+            );
+            res.status(401).json({ error: "incorrect password" });
+          }
+        } else {
+          // if not matches found it returns 404 not found
+          res.status(404).json({ error: "not found" });
+        }
       }
-    } else {
-      res.send("User Does Not Exist");
     }
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-const checkuser = (req, res) => {
-  res.send("check user");
-};
-const protect = (req, res, next) => {
-  const token = req.cookies["token"];
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, payload) => {
-    if (err) {
-      console.log("user not loged");
-      res.send("user not send");
-    } else {
-      req.user = payload;
-      next();
-    }
-  });
+  );
 };
 
 const logout = (req, res) => {
   res.cookie("token", "");
-  res.send("Successfully logged out");
+  res.send("Logged out successfully");
 };
 
-module.exports = { register, login, logout, checkuser, protect };
+const protect = (req, res, next) => {
+  const token = req.cookies["token"];
+
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, payload) => {
+    if (err) {
+      console.log("Could not log user in:-", err.message);
+      res.status(401).json({
+        status: false,
+        message: "YOu are not logged in",
+      });
+      return;
+    }
+    const user = payload;
+
+    console.log(user);
+
+    req.user = user;
+    next();
+  });
+};
+
+const all_users = (req, res) => {
+  const results = [];
+  // returns all users in the database in the json format with key all_users
+  dbConnection.query("SELECT * FROM users", (err, result) => {
+    for (i of result) {
+      const users = {
+        id: i.id,
+        username: i.username,
+        email: i.email,
+      };
+      results.push(users);
+    }
+
+    console.log("All users displayed");
+    res.status(200).json({ all_users: results });
+  });
+};
+
+module.exports = { register, login, all_users, protect, logout };

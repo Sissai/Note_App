@@ -10,9 +10,12 @@ const port = 3003;
 const userRoute = require("./routes/userRoute");
 const dbConnection = require("./Config/db");
 const noteRoute = require("./routes/notesRouter");
-// user route middleware
+
+// middleware
 app.use(express.json());
 app.use(cookieparser());
+
+// Route middleware
 app.use("/api/users", userRoute);
 app.use("/api/notes", noteRoute);
 
