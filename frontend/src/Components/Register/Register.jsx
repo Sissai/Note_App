@@ -6,7 +6,7 @@ const Register = (props) => {
     <div  className="register-container">
         <h2>Register</h2>
         <div className="register-form">
-            <form action="post" href='/register'>
+            <form method='post' action='/register'>
                 <label for='username'>Username </ label>
                 <input type="text" name="username"/>
                 <label for='password'>Password </label>
