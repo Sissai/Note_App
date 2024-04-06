@@ -1,0 +1,46 @@
+.register-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 5px;
+    border: 1px solid brown;
+    background-color:  #282c34;
+    color: white;
+    padding: 10px;
+    max-width: 60%;
+    border-radius: 15px;
+}
+
+.register-form form{
+    border-top: 1px solid brown;
+    display: flex;
+    font-size: 1rem;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 0 10px;
+}
+
+input {
+    padding: 10px 5px 10px;
+    width: 70%;
+}
+
+button {
+    background-color: darkblue;
+    font-size: 1em;
+    color: white;
+    cursor: pointer;
+    width: 70%;
+    border: none;
+    padding: 5px 20px 5px;
+}
+
+button:hover{
+    background-color: rgb(52, 52, 134);
+}
+
+.register-footer {
+    border-top: 1px solid brown;
+}

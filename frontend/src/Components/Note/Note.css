@@ -1,0 +1,56 @@
+.note-container{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid brown;
+    justify-content: space-between;
+    border-radius: 5px;
+    width: 80%;
+}
+
+.note-content{
+    text-align: center;
+    padding: 20px;   
+}
+
+.note-footer {
+    display: flex;
+    color: wheat;
+    flex-direction: row;
+    justify-content: space-between;
+    border-top: 1px solid brown;
+    background-color: #282c34;
+    padding: 5px 10px 5px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 45px;
+    justify-self: flex-end;
+    align-self: center;
+}
+
+.buttons button {
+    color: wheat;
+    font-size: large;
+    border: none;
+    cursor: pointer;
+    padding: 5px 25px 5px;
+}
+
+.delete {
+    background-color: red;
+}
+
+.delete:hover {
+    background-color: rgb(248, 82, 82);
+}
+
+.update {
+    background-color: blue;
+}
+
+.update:hover {
+    background-color: rgb(101, 101, 240);
+}
