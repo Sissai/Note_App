@@ -1,0 +1,18 @@
+.logoAndText{
+  display: flex;
+}
+.logoText{
+  margin-left: 40px;
+margin-top: 2%;
+color:#91e5f5 ;
+}
+
+.HeaderBackground{
+  background-color: #1A1A1A;
+  padding: 25px;
+}
+.UsernameLogout{
+  position: absolute;
+  top: 4%;
+  right: 5%;
+}
