@@ -3,7 +3,7 @@ import "./Signin.css";
 function Signup() {
   return (
     <div className="register-container main">
-      <h2>SignUp</h2>
+      <h2>SignIn</h2>
       <div className="register-form">
         <form method="post" action="/register">
           <label for="username">Username </label>
