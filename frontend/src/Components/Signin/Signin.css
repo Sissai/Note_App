@@ -51,3 +51,6 @@ button:hover{
 .register-footer {
     border-top: 1px solid brown;
 }
+.signup-button{
+   margin-left: 15%;
+}

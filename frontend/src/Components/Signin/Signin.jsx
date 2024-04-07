@@ -19,7 +19,7 @@ function Signup() {
 
       <div className="register-footer">
         <p>Don't have an Account?</p>
-        <button onClick="/signin">SIGN UP AND REGISTER</button>
+        <button className='signup-button' onClick="/signin">SIGN UP AND REGISTER</button>
       </div>
     </div>
   );
