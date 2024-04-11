@@ -4,7 +4,7 @@ import './Register.css'
 const Register = (props) => {
   return (
     <div  className="register-container">
-        <h2>Register</h2>
+        <h2>REGISTER</h2>
         <div className="register-form">
             <form method='post' action='/register'>
                 <label for='username'>Username </ label>
