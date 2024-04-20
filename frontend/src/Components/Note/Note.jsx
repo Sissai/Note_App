@@ -15,7 +15,7 @@ const Note = (props) => {
                 2 days ago
                 <div class="row">
                     <form class="col-md-6" action="/">
-                        <button type="submit" class="btn btn-primary px-3 mx-2 mb-0">Update</button>
+                        <button type="submit" class="btn btn-primary px-3 mx-2 mb-0 custom-bg-btn">Update</button>
                     </form>
                     <form class="col-md-6" action="/">
                         <button type="submit" class="btn btn-danger px-3 mx-2">Delete</button>

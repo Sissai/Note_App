@@ -1,10 +1,10 @@
 import React from "react"
 
-const Register = (props) => {
+const SignIn = (props) => {
   return (
     <div className="container border p-3 mx-auto m-4">
-        <h3 class="text-center p-2 border-bottom">
-            Register
+        <h3 class="text-center p-2 border-bottom custom-bg">
+            Sign In
         </h3>
         <div class="col-md-10 mx-auto p-3">
             <form action="/">
@@ -17,14 +17,14 @@ const Register = (props) => {
                     <input type="password" class="form-control" id="exampleInputPassword1" />
                 </div>
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary m-3 px-5">Register</button>
+                    <button type="submit" class="btn btn-primary m-3 px-5 custom-bg-btn">Sign In</button>
                 </div>
             </form>
         </div>
         <div class="border-top">
-            <p class="text-center p-3">Already a User?</p>
+            <p class="text-center p-3">Not a User? Create an account.</p>
                 <div class="text-center">
-                    <a href="/" class="btn btn-primary px-5">Sign In</a>
+                    <a href="/" class="btn btn-primary px-5 custom-bg-btn">Sign Up</a>
                 </div>
         </div>
     </div>
@@ -32,4 +32,4 @@ const Register = (props) => {
     )
 };
 
-export default Register;
+export default SignIn;

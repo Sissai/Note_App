@@ -1,0 +1,14 @@
+.custom-bg {
+    background-color: rgb(31, 31, 100);
+    color: white;
+}
+
+.custom-bg-btn {
+    background-color: rgb(33, 33, 100);
+    color: white;
+}
+
+.custom-bg-btn:hover {
+    background-color: rgb(71, 71, 146);
+    color: white;
+}
